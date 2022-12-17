@@ -7,6 +7,9 @@ import SignUpGlobiePage from '../views/SignUpGlobiePage'
 import SignUpHostPage from '../views/SignUpHostPage'
 import HomePage from '../views/HomePage'
 import GPLandingPage from '../views/GlobieLandingPage.vue'
+import ViewPost from '../views/ViewPost.vue'
+import GPProfile from '../views/GPProfile.vue'
+import GPReservations from '../views/GPReservations.vue'
 
 
 Vue.use(VueRouter)
@@ -18,26 +21,26 @@ const routes = [
     component: LandingPage
   },
   {
-    path: '/posts',
+    path: '/globie',
     name: 'Feed',
     component: HomePage,
     children: [
       {
         path: 'feed',
         component: GPLandingPage,
-      }, 
-      // {
-      //   path: 'reservation',
-      //   component: LandingPage,
-      // },
-      // {
-      //   path: 'application',
-      //   component: LandingPage,
-      // },
-      // {
-      //   path: 'profile',
-      //   component: LandingPage,
-      // }
+      },
+      {
+        path: 'viewpost',
+        component: ViewPost,
+      },
+      {
+        path: 'myprofile',
+        component: GPProfile,
+      },
+      {
+        path: 'reservations',
+        component: GPReservations,
+      }
     ],
   },
   {

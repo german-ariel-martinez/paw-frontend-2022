@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bg">
         <div class="layer_one"></div>
         <div class="layer_two"></div>
         <div class="layer_three"><span class="asd">Hi Globie, welcome to the family!</span></div>
@@ -14,30 +14,45 @@
                     <div class="form_card_main_column">
                         <div class="form_title">
                             Register
+                            <button class="btn" type="button" @click="validateForm()"> Finish </button>
                         </div>
                         <div class="form_form">
-                            <form class="form_main_col" action="">
+                            <form class="form_main_col" name="myForm">
                                 <div class="form_row">
-                                    <input class="form_input" type="text" id="fname" name="firstname" placeholder="Enter your email">
+                                    <!-- email -->
+                                    <input class="form_input" v-model="email" type="text" id="fname" name="email" placeholder="Enter your email">
+                                    <span class="error-message" v-show="!v_email">Email is not valid.</span>
                                 </div>
                                 <div class="form_row_2">
                                     <div class="form_col" style="margin-right:5%;">
-                                        <input class="form_input" type="text" id="fname" name="firstname" placeholder="Enter your password">
+                                        <!-- pass 1 -->
+                                        <input class="form_input" v-model="pass" type="password" id="fname" name="firstname" placeholder="Enter your password">
+                                        <span class="error-message" v-show="!v_pass">Password must be at least 8 characters long.</span>
                                     </div>
                                     <div class="form_col">
-                                        <input class="form_input" type="text" id="fname" name="firstname" placeholder="Confirm password">
+                                        <!-- pass 2 -->
+                                        <input class="form_input" v-model="cpass" type="password" id="fname" name="firstname" placeholder="Confirm password">
+                                        <span class="error-message" v-show="!v_cpass">Passwords don't match.</span>
                                     </div>
                                 </div>
                                 <div class="form_row_2">
                                     <div class="form_col" style="margin-right:5%;">
-                                        <input class="form_input" type="text" id="fname" name="firstname" placeholder="Enter your name">
+                                        <!-- name -->
+                                        <input class="form_input" v-model="name" type="text" id="fname" name="firstname" placeholder="Enter your name">
+                                        <span class="error-message" v-show="!v_name_chars">May only contain letters, spaces, accents and apostrophes.</span>
+                                        <span class="error-message" v-show="!v_name_len">Should be at least 2 characters long.</span>
                                     </div>
                                     <div class="form_col">
-                                        <input class="form_input" type="text" id="fname" name="firstname" placeholder="Enter your lastname">
+                                        <!-- last name -->
+                                        <input class="form_input" v-model="lastname" type="text" id="fname" name="firstname" placeholder="Enter your lastname">
+                                        <span class="error-message" v-show="!v_lastname_chars">May only contain letters, spaces, accents and apostrophes.</span>
+                                        <span class="error-message" v-show="!v_lastname_len">Should be at least 2 characters long.</span>
                                     </div>
                                 </div>
                                 <div class="form_row_3">
-                                    <textarea class="form_textarea" name="textarea" placeholder="Describe your goals here..."></textarea>
+                                    <!-- desc -->
+                                    <textarea class="form_textarea" v-model="desc" name="textarea" placeholder="Just a brief description about you..."></textarea>
+                                    <span class="error-message" v-show="!v_desc">A brief description is required.</span>
                                 </div>
                             </form>
                         </div>
@@ -52,22 +67,104 @@
 export default {
     data (){
         return {
-
+            email : '',
+            pass : '',
+            cpass : '',
+            name : '',
+            lastname : '',
+            desc : '',
+            v_email : true,
+            v_pass : true,
+            v_cpass : true,
+            v_name_chars : true,
+            v_name_len : true,
+            v_lastname_chars : true,
+            v_lastname_len : true,
+            v_desc : true,
         }
     },
     methods: {
         goto: function(to) {
             this.$router.push({name:to});
+        },
+        validateForm: function() {
+            console.log("Pass : " + this.pass)
+            console.log(String(this.pass).length)
+            if (!this.validateEmail())
+                this.v_email = false
+            else
+                this.v_email = true
+            if (String(this.pass).length < 8)
+                this.v_pass = false
+            else
+                this.v_pass = true
+            if (this.pass != this.cpass || this.cpass == '')
+                this.v_cpass = false
+            else
+                this.v_cpass = true
+            if (String(this.name).length < 2)
+                this.v_name_len = false
+            else
+                this.v_name_len = true
+            if (/\d/.test(this.name))
+                this.v_name_chars = false
+            else
+                this.v_name_chars = true
+            if (String(this.lastname).length < 2)
+                this.v_lastname_len = false
+            else
+                this.v_lastname_len = true
+            if (/\d/.test(this.lastname))
+                this.v_lastname_chars = false
+            else
+                this.v_lastname_chars = true
+            if (this.desc == '')
+                this.v_desc = false
+            else
+                this.v_desc = true
+            // goto(feed)
+        },
+        validateEmail: function() {
+            return this.email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
         }
     }
 }
 </script>
 
 <style scoped>
+.bg {
+    background-image: url('~@/assets/mountain.jpg');
+    background-size: cover; /* or contain depending on what you want */
+    background-position: center center;
+    background-repeat: no-repeat;
+    text-align:center;
+    margin:auto;
+    padding:0;
+    transition: all 1s ease;
+}
+.btn:hover {
+    background-color: #c62034;
+    transition: all 1s ease;
+    color: white;
+}
+.btn {
+    border: none;
+    outline: none;
+    height: 40px;
+    color: white;
+    background-color: rgba(32, 40, 68, 1);
+    font-size: 18px;
+    margin-right: 20px;
+}
+.error-message {
+    color:#c62034;
+    font-size: 1.5vh;
+}
 .asd {
-    margin-right:1vw;
+    margin-right:2vw;
     margin-top:1.5vh;
-    color:black;
+    color:white;
+    border-bottom: 5px solid #c62034;
 }
 .nav_title {
     display: flex;
@@ -87,10 +184,11 @@ export default {
     padding-left: 1vw;
     padding-right: 1vw;
     padding-top: .5vw;
+    background-color: white;
 }
 .form_row_3 {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
@@ -108,7 +206,7 @@ export default {
 }
 .form_row {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -121,6 +219,7 @@ export default {
     padding-left: 1vw;
     height: 5vh;
     width: 100%;
+    background-color: white;
 }
 .form_main_col {
     display: flex;
@@ -137,6 +236,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     font-size: 2em;
     color: black;
     height: 15%;
@@ -229,7 +329,6 @@ export default {
     height: 0; 
     border-top: 40vw solid rgba(32, 40, 68, 1); 
     border-right: 20vw solid transparent;
-    z-index: -1;
     display: flex;
 }
 .layer_two {
@@ -243,11 +342,10 @@ export default {
 }
 .layer_three {
     position: fixed;
-    width: 100vw; 
-    height: 100vh;
-    z-index: -4;
+    width: 100vw;
     display: flex;
     justify-content: flex-end;
     font-size: 3rem;
+    background-color: rgba(32, 40, 68, 1);
 }
 </style>
